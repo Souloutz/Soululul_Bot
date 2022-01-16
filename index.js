@@ -1,5 +1,8 @@
-const Discord = require("discord.js");
-const { prefix, token } = require("./config.json");
+const Discord = require("discord.js")
+const { prefix, token } = require("./config.json")
+
+const generateImage = require("./generateImage")
+
 const client = new Discord.Client({
     intents: [
         "GUILDS",
@@ -8,7 +11,26 @@ const client = new Discord.Client({
     ]
 })
 
-client.on("ready", () => {
+
+let bot = {
+    client, 
+    prefix: "s-",
+    owners: ["438763772941697024"]
+}
+
+// stores commands and events 
+client.commands = new Discord.Collection()
+client.events = new Discord.Collection()
+
+client.loadEvents = (bot, reload) => require("./handlers/events")(bot, reload)
+client.loadCommands = (bot, reload) => require("./handlers/commands")(bot, reload)
+
+client.loadEvents(bot, false)
+client.loadCommands(bot, false)
+
+module.exports = bot
+
+/* client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}`)
 })
 
@@ -29,8 +51,13 @@ client.on("messageCreate", (message) => {
 
 const welcomeChannelID = "471693842018467853"
 
-client.on("guildMemberAdd", (member) => {
-    member.guild.channels.cache.get(welcomeChannelID).send(`<@${member.id}> Welcome to the server!`)
+client.on("guildMemberAdd", async (member) => {
+    const img = await generateImage(member)
+    member.guild.channels.cache.get(welcomeChannelID).send({
+        content: `<@${member.id}> Welcome to the server!`,
+        files: [img]
+    })
 })
+ */
 
 client.login(token)
