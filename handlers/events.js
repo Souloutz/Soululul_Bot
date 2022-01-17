@@ -26,7 +26,7 @@ module.exports = (bot, reload) => {
 
 
 function triggerEventHandler(bot, event, ...arg) {
-    const {client} = bot
+    const { client } = bot
 
     try {
         if (client.events.has(event))
@@ -39,7 +39,7 @@ function triggerEventHandler(bot, event, ...arg) {
     }
 }
 function initEvents(bot) {
-    const {client} = bot
+    const { client } = bot
 
     client.on("ready", () => {
         triggerEventHandler(bot, "ready")

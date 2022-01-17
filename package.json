@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Souloutz/Soululul_Bot#readme",
   "dependencies": {
     "canvas": "^2.8.0",
-    "discord.js": "^13.6.0"
+    "discord.js": "^13.6.0",
+    "ms": "^2.1.3"
   }
 }

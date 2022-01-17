@@ -1,3 +1,4 @@
+const Timeout = new Set()
 const Discord = require("discord.js")
 
 module.exports = {
@@ -10,7 +11,7 @@ module.exports = {
         if (!message.content.startsWith(prefix)) return
 
         const args = message.content.slice(prefix.length).trim().split(/ + /g)
-        const cmdstr = args.shift().toLowerCase()
+        const cmdstr = args.shift().toLowerCase() 
 
         let command = client.commands.get(cmdstr)
         if (!command) return;
@@ -18,7 +19,7 @@ module.exports = {
         let member = message.member
 
         if (command.devOnly && !owners.includes(member.id)) {
-            return message.reply("This command is only available to teh developers")
+            return message.reply("This command is only available to the developers")
         }
 
         if (command.permissions && member.permissions.missing(command.permissions).length !== 0) {
@@ -27,6 +28,17 @@ module.exports = {
 
         try {
             await command.run({...bot, message, args})
+
+            if (command.timeout) {
+                if (Timeout.has(`${message.author.id}${command.name}`)) {
+                    return message.reply(`You can only use this command every ${ms(command.timout)}`)
+                } 
+            }
+
+            Timeout.add(`${message.author.id}${command.name}`)
+            setTimeout(() => {
+                Timeout.delete(`${message.author.id}${command.name}`)
+            }, command.timeout)
         } 
         catch (err) {
             let errMsg = err.toString()
